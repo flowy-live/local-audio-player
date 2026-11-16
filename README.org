@@ -1,0 +1,12 @@
+This is a simple audio player for work:
+scan the tracks available, and list them in the terminal for user selection.
+
+clear, then start playing, and give more controls to pause, stop, next, previous, change playlist, etc.
+
+
+* Todo
+- [ ] use file descriptors to traverse and identify tracks
+- [ ] review arrays in C
+- [ ] create global playlists array
+- [ ] source and download tracks for each playlist
+
