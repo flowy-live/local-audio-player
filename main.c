@@ -142,8 +142,10 @@ int main(int argc, char *argv[]) {
   int r;
   struct Playlist *playlists;
   size_t len_playlists;
+
+  if (argc < 2) return -1;
   
-  r = load_playlists("playlists", &playlists, &len_playlists);
+  r = load_playlists(argv[1], &playlists, &len_playlists);
   if (r == -1) {
     fprintf(stderr, "Unable to load playlists\n");
     return -1;

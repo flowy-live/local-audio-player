@@ -1,11 +1,14 @@
-This is a simple audio player for work:
-scan the tracks available, and list them in the terminal for user selection.
+#+title: README
 
-clear, then start playing, and give more controls to pause, stop, next, previous, change playlist, etc.
+* Overview
+This is a simple audio player written using C and miniaudio. It plays locally downloaded tracks.
 
+This was an experiment to work with C and get a feel for integration with Emacs. In addition, it is relieving to have a simple player for work instead of using a browser and anti-privacy streaming platforms.
 
-* Todo
-- [ ] review arrays in C
-- [ ] create global playlists array
-- [ ] source and download tracks for each playlist
+* Features
+- Load playlist folder and play all tracks in it
+- Skip current song
+- Add any number of playlists and tracks in a folder and pass the path to all playlists as an argument
+- Run program and select desired playlist by sending to stdin
+- Load `./player.el` to integrate into emacs
 
