@@ -5,7 +5,6 @@ clear, then start playing, and give more controls to pause, stop, next, previous
 
 
 * Todo
-- [ ] use file descriptors to traverse and identify tracks
 - [ ] review arrays in C
 - [ ] create global playlists array
 - [ ] source and download tracks for each playlist
