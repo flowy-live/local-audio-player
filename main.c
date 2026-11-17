@@ -34,8 +34,10 @@ int init_playlist(char *path, struct Playlist *p) {
   p->tracks_capacity = 10;
   p->tracks = calloc(p->tracks_capacity, sizeof(char *));
   if (!p->tracks) return -1;
-  
-  strncpy(p->name, path, sizeof(p->name) - 1);
+
+  char *base = strrchr(path, '/');
+  base = base ? base + 1 : path;
+  strncpy(p->name, base, sizeof(p->name) - 1);
   p->name[sizeof(p->name) - 1] = '\0';
 
   DIR *dir;
@@ -58,13 +60,15 @@ int init_playlist(char *path, struct Playlist *p) {
 	p->tracks_capacity = new_capacity;
       }
 
-      char *track = strdup(item->d_name);
+      size_t track_len = strlen(item->d_name) + strlen(path) + 2; // '/' and '\0'
+      char *track = malloc(sizeof(*track) * (track_len));
       if (!track) {
 	free_playlist(p);
 	closedir(dir);
 	return -1;
       }
       
+      snprintf(track, track_len, "%s/%s", path, item->d_name);
       p->tracks[p->tracks_len++] = track;
     }
   }
@@ -129,6 +133,11 @@ int load_playlists(const char *playlists_path, struct Playlist **out, size_t *le
   return -1;
 }
 
+void free_playlists(struct Playlist *playlists, size_t len) {
+  for (size_t i = 0; i < len; i++) free_playlist(&playlists[i]);
+  free(playlists);
+}
+
 int main(int argc, char *argv[]) {
   int r;
   struct Playlist *playlists;
@@ -148,27 +157,55 @@ int main(int argc, char *argv[]) {
     }
   }
 
-  for (size_t i = 0; i < len_playlists; i++) free_playlist(&playlists[i]);
-  free(playlists);
+  char selected_playlist[1024];
+  char *sel = fgets(selected_playlist, sizeof(selected_playlist), stdin);
+  if (!sel) {
+    free_playlists(playlists, len_playlists);
+    return -1;
+  }
 
-  return 0;
+  selected_playlist[strcspn(selected_playlist, "\n")] = '\0';
+  printf("Beginning to play: %s\n", selected_playlist);
 
   ma_result result;
   ma_engine engine;
   result = ma_engine_init(NULL, &engine);
   if (result != MA_SUCCESS) {
     fprintf(stderr, "Unable to init engine\n");
+    free_playlists(playlists, len_playlists);
     return -1;
   }
 
-  ma_sound focus_track;
-  result = ma_sound_init_from_file(&engine, "focus.mp3", 0, NULL, NULL, &focus_track);
-
-  ma_sound_start(&focus_track);
-
-  while (ma_sound_is_playing(&focus_track)) {
+  struct Playlist *curr_playlist = NULL;
+  for (int i = 0; i < len_playlists; i++) {
+    if (strstr(playlists[i].name, selected_playlist) != NULL) {
+      curr_playlist = &playlists[i];
+      break;
+    }
+  }
+  if (!curr_playlist) {
+    fprintf(stderr, "Playlist not found!\n");
+    free_playlists(playlists, len_playlists);
+    ma_engine_uninit(&engine);
+    return -1;
   }
 
-  ma_sound_uninit(&focus_track);
+  ma_sound ma_track;
+  for (int i = 0; i < curr_playlist->tracks_len; i++) {
+    char *track = curr_playlist->tracks[i];
+    result = ma_sound_init_from_file(&engine, track, 0, NULL, NULL, &ma_track);
+    if (result == MA_SUCCESS) {
+      printf("Starting track: %s\n", track);
+      
+      ma_sound_start(&ma_track);
+      while (ma_sound_is_playing(&ma_track)) {}
+    }
+  }
+  
+  ma_sound_uninit(&ma_track);
   ma_engine_uninit(&engine);
+  
+  free_playlists(playlists, len_playlists);
+  
+  return 0;
 }
