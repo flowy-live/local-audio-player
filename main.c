@@ -211,6 +211,8 @@ int main(int argc, char *argv[]) {
 	}
       }
       
+      ma_sound_uninit(&ma_track);
+      
       if (quit) {
 	break;
       }
@@ -218,8 +220,8 @@ int main(int argc, char *argv[]) {
   }
 
   printf("Finished playlist\n");
-  
-  ma_sound_uninit(&ma_track);
+
+  ma_sound_uninint(&ma_track);
   ma_engine_uninit(&engine);
   
   free_playlists(playlists, len_playlists);
