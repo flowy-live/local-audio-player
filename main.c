@@ -202,7 +202,7 @@ int main(int argc, char *argv[]) {
       ma_sound_start(&ma_track);
       printf("[n] next  [q] quit \n");
       bool quit = false, next = false;
-      while (ma_sound_is_playing(&ma_track) && !next && !quit) {
+      while (!ma_sound_at_end(&ma_track) && !next && !quit) {
 	int c = fgetc_unlocked(stdin);
 	if (c == 'n') {
 	  next = true;
@@ -221,7 +221,7 @@ int main(int argc, char *argv[]) {
 
   printf("Finished playlist\n");
 
-  ma_sound_uninint(&ma_track);
+  ma_sound_uninit(&ma_track);
   ma_engine_uninit(&engine);
   
   free_playlists(playlists, len_playlists);
