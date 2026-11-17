@@ -5,39 +5,47 @@ This is a simple audio player written using C and miniaudio. It plays locally do
 
 This was an experiment to understand miniaudio's high-level API and get a feel for integration with Emacs.
 
-It is relieving to have a simple player which I can control within Emacs instead of using a browser and anti-privacy streaming platforms.
+It is relieving to have a simple player within the Emacs environment, and stay in flow without context switching to a browser and anti-privacy streaming platforms.
 
 * Features
 - Load playlist folder and play all tracks in it
 - Skip current song
 - Add any number of playlists and tracks in a folder
-- Run program and select desired playlist by sending to stdin
-- Load `./player.el` to integrate into emacs
+- Run program and select desired playlist to play
+- Integrate into Emacs
 
 * Getting started
-```
-git clone <this_repo_url>
-cd audio-playground
 
-gcc main.c -o play -ldl -lpthread -lm
+** 1. Create a playlists folder and download music
+You should have a directory called playlists, and within them, a folder for each playlist. Then, download tracks within each playlist folder.
 
-cp ./player.el ~/.emacs.d/
-```
+** 2. Build
+#+NAME: build
+#+BEGIN_SRC bash
+  git clone https://github.com/flowy-live/local-audio-player 
+  cd local-audio-player
 
-Note: modify the hardcoded paths (within player.el) to your built executable & playlists folder.
+  gcc main.c -o play -ldl -lpthread -lm # linux compilation, modify for macos / windows
+#+END_SRC
+
+** 3. Setup Emacs
+Modify the hardcoded paths in player.el to your built executable & playlists folder.
+
+src_bash{cp ./player.el ~/.emacs.d/}
 
 Add the following to your `.emacs`:
-```
+#+BEGIN_SRC lisp
 (add-to-list 'load-path (expand-file-name "~/.emacs.d"))
 (require 'player)
 
 ; optional
 (global-set-key (kbd "C-c n p") #'player-start)
 ```
+#+END_SRC
 
-Run M-x eval-buffer to load mode, package, functions.
+Run src_lisp{M-x eval-buffer} to evaluate lisp expressions in player.el.
 
 Usage:
-- M-x player-start (prompt will ask for which playlist you would like to play)
-- M-x player-next (or 'n' within player buffer mode)
-- M-x player-quit (or 'q' within player buffer mode)
+- src_lisp{M-x player-start} (you will be prompted for which playlist to begin playing)
+- src_lisp{M-x player-next} (or 'n' within player buffer mode)
+- src_lisp{M-x player-quit} (or 'q' within player buffer mode)
