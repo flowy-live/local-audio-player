@@ -198,9 +198,24 @@ int main(int argc, char *argv[]) {
       printf("Starting track: %s\n", track);
       
       ma_sound_start(&ma_track);
-      while (ma_sound_is_playing(&ma_track)) {}
+      printf("[n] next  [q] quit \n");
+      bool quit = false, next = false;
+      while (ma_sound_is_playing(&ma_track) && !next && !quit) {
+	int c = fgetc_unlocked(stdin);
+	if (c == 'n') {
+	  next = true;
+	} else if (c == 'q') {
+	  quit = true;
+	}
+      }
+      
+      if (quit) {
+	break;
+      }
     }
   }
+
+  printf("Finished playlist\n");
   
   ma_sound_uninit(&ma_track);
   ma_engine_uninit(&engine);
