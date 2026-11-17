@@ -31,7 +31,7 @@ You should have a directory called playlists, and within them, a folder for each
 ** 3. Setup Emacs
 Modify the hardcoded paths in player.el to your built executable & playlists folder.
 
-src_bash{cp ./player.el ~/.emacs.d/}
+~cp ./player.el ~/.emacs.d/~
 
 Add the following to your `.emacs`:
 #+BEGIN_SRC lisp
@@ -43,9 +43,9 @@ Add the following to your `.emacs`:
 ```
 #+END_SRC
 
-Run src_lisp{M-x eval-buffer} to evaluate lisp expressions in player.el.
+Run ~M-x eval-buffer~ to evaluate lisp expressions in player.el.
 
 Usage:
-- src_lisp{M-x player-start} (you will be prompted for which playlist to begin playing)
-- src_lisp{M-x player-next} (or 'n' within player buffer mode)
-- src_lisp{M-x player-quit} (or 'q' within player buffer mode)
+- ~M-x player-start~ (you will be prompted for which playlist to begin playing)
+- ~M-x player-next~ (or 'n' within player buffer mode)
+- ~M-x player-quit~ (or 'q' within player buffer mode)
