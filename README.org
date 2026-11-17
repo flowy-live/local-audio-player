@@ -3,12 +3,41 @@
 * Overview
 This is a simple audio player written using C and miniaudio. It plays locally downloaded tracks.
 
-This was an experiment to work with C and get a feel for integration with Emacs. In addition, it is relieving to have a simple player for work instead of using a browser and anti-privacy streaming platforms.
+This was an experiment to understand miniaudio's high-level API and get a feel for integration with Emacs.
+
+It is relieving to have a simple player which I can control within Emacs instead of using a browser and anti-privacy streaming platforms.
 
 * Features
 - Load playlist folder and play all tracks in it
 - Skip current song
-- Add any number of playlists and tracks in a folder and pass the path to all playlists as an argument
+- Add any number of playlists and tracks in a folder
 - Run program and select desired playlist by sending to stdin
 - Load `./player.el` to integrate into emacs
 
+* Getting started
+```
+git clone <this_repo_url>
+cd audio-playground
+
+gcc main.c -o play -ldl -lpthread -lm
+
+cp ./player.el ~/.emacs.d/
+```
+
+Note: modify the hardcoded paths (within player.el) to your built executable & playlists folder.
+
+Add the following to your `.emacs`:
+```
+(add-to-list 'load-path (expand-file-name "~/.emacs.d"))
+(require 'player)
+
+; optional
+(global-set-key (kbd "C-c n p") #'player-start)
+```
+
+Run M-x eval-buffer to load mode, package, functions.
+
+Usage:
+- M-x player-start (prompt will ask for which playlist you would like to play)
+- M-x player-next (or 'n' within player buffer mode)
+- M-x player-quit (or 'q' within player buffer mode)
